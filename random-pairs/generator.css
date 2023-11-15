@@ -1,0 +1,33 @@
+.textarea-wrapper {
+    position: relative;
+}
+
+.color-input {
+    padding: 0;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    right: .3rem;
+    top: .3rem;
+    border: 1px solid #ced4da;
+}
+
+.code-container {
+    display: none;
+}
+
+.code-container .card-body {
+    padding: .5rem 4rem .5rem 1rem;
+    position: relative;
+}
+
+.code-container .card-body pre {
+    margin: 0;
+    padding: .5rem 0;
+}
+
+.code-container .card-body .btn {
+    position: absolute;
+    right: .3rem;
+    top: .3rem;
+}

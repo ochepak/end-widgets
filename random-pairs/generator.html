@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Random pair | EN Widgets</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="./generator.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container p-0 mt-3 mb-4">
+            <form id="pair-form">
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-12 col-lg-6">
+                                <label for="part1" class="form-label">Part 1</label>
+                                <div class="textarea-wrapper" data-key="part1Color">
+                                    <textarea style="color: #000" class="form-control"
+                                              id="part1" rows="5" required name="part1"></textarea>
+                                    <input class="color-input" type="color" value="#000000">
+                                </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                                <label for="part2" class="form-label">Part 2</label>
+                                <div class="textarea-wrapper" data-key="part2Color">
+                                    <textarea style="color: #ff0000" class="form-control"
+                                              id="part2" rows="5" required name="part2"></textarea>
+                                    <input class="color-input" type="color" value="#ff0000">
+                                </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Generate iframe code</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="container code-container">
+            <div class="card">
+                <div class="card-body">
+                    <pre id="iframe-code"></pre>
+                    <button id="copy-button" type="button" class="btn btn-sm btn-outline-primary">copy</button>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            const values = {
+                part1Color: "#000",
+                part2Color: "#ff0000",
+                part1: [],
+                part2: []
+            };
+
+            function onColorChange(ev) {
+                const wrapperEl = ev.target.closest(".textarea-wrapper");
+                const textarea = wrapperEl.querySelector("textarea");
+                const key = wrapperEl.getAttribute("data-key");
+
+                textarea.style.color = ev.target.value;
+                values[key] = ev.target.value;
+            }
+
+            function generateIframe(v) {
+                const iframeCodeEl = document.querySelector("#iframe-code");
+
+                iframeCodeEl.innerText = `<iframe src="${ window.location.origin }/eng-widgets/random-pairs.html?${ new URLSearchParams(v).toString() }"
+    width="100%"
+    height="300px">
+</iframe>`;
+
+                document.querySelector(".code-container").style.display = "block";
+
+                document.querySelector("#copy-button").addEventListener("click", () => {
+                    const iframeCodeEl = document.querySelector("#iframe-code");
+                    navigator.clipboard.writeText(iframeCodeEl.innerText);
+                });
+            }
+
+            const form = document.querySelector("#pair-form");
+
+            form.addEventListener("submit", (ev) => {
+                ev.preventDefault();
+
+                const formData = new FormData(ev.target);
+                for (const pair of formData.entries()) {
+                    values[pair[0]] = pair[1].split("\n");
+                }
+
+                generateIframe(values);
+            });
+
+            document.addEventListener("input", (ev) => {
+                if (ev.target.getAttribute("type") === "color") {
+                    onColorChange(ev);
+                }
+            })
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>
