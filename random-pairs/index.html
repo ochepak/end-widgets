@@ -69,7 +69,7 @@
                 const iframeCodeEl = document.querySelector("#iframe-code");
 
                 iframeCodeEl.innerText = `
-                    <iframe src="${ window.location.origin }/random-pairs/random-pairs.html" style="border: 0"
+                    <iframe src="${ window.location.origin }/eng-widgets/random-pairs/random-pairs.html" style="border: 0"
                         onload="this.contentWindow.postMessage('${ new URLSearchParams(v).toString() }', '*');"
                         width="100%" height="300px">
                     </iframe>`;
