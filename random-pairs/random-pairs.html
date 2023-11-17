@@ -25,11 +25,12 @@
             let partsNumber = 2;
 
             window.addEventListener("message", (ev) => {
-                const urlSearchParams = new URLSearchParams(decodeURIComponent(ev.data));
+                const urlSearchParams = new URLSearchParams(ev.data);
                 for (let key of urlSearchParams.keys()) {
                     values[key] = key.includes('Color') ? urlSearchParams.get(key) : urlSearchParams.get(key).split(",");
                 }
 
+                console.log(values);
                 partsNumber = Object.keys(values).length / 2;
                 document.querySelector(".container-fluid").style.visibility = "visible";
             });
