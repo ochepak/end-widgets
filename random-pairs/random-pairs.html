@@ -7,13 +7,14 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Random pair | EN Widgets</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <link href="./random-pairs.css" rel="stylesheet">
     </head>
 
     <body>
         <div class="container-fluid p-2">
             <div id="pairs-container">
-                <h1>Press «Start» to begin</h1>
+                <h1 class="mb-0">Press «Start» to begin</h1>
             </div>
             <button id="start-btn" type="button" class="mt-3 btn btn-primary">Start</button>
         </div>
@@ -43,28 +44,49 @@
                 return array[Math.floor(Math.random() * array.length)];
             }
 
+            function updateParts(partsStr) {
+                document.querySelector("#pairs-container").innerHTML = partsStr;
+                anime.timeline({
+                    loop: false,
+                    autoplay: true
+                }).add({
+                    targets: "#pairs-container .letter",
+                    scale: [0,1],
+                    opacity: [0,1],
+                    easing: "easeOutExpo",
+                    duration: 300,
+                    delay: (el, i) => 20 * i
+                });
+            }
+
             function next() {
-                let randomPair = "";
+                let partsStr = "";
 
                 for (let i = 1; i <= partsNumber; i++) {
                     const colorKey = `p${ i }Color`;
                     const value = getRandomElementFromArray(values[`p${ i }`]);
 
-                    randomPair += `<span class="pair ${ i % 2 === 0 ? 'even' : 'odd' }" style="color: ${ values[colorKey] }">${ value }</span>`;
+                    partsStr += `<div class="part" style="color: ${ values[colorKey] }">${ value.replace(/\S/g, "<span class='letter' style='display: inline-block'>$&</span>") }</div>`;
                 }
 
                 if (!started) {
                     startBtn.innerText = "Next";
-                    document.querySelector("#pairs-container").innerHTML = randomPair;
+                    updateParts(partsStr);
                 } else {
-                    document.querySelectorAll("#pairs-container .pair").forEach((el) => {
-                        el.classList.add('is-removing');
-                        startBtn.disabled = true;
+                    anime.timeline({
+                        loop: false,
+                        autoplay: true
+                    }).add({
+                        targets: "#pairs-container .letter",
+                        scale: [1,0],
+                        opacity: [1,0],
+                        easing: "easeOutExpo",
+                        duration: 300,
+                        delay: (el, i) => 20 * i,
+                        complete: () => {
+                            updateParts(partsStr);
+                        }
                     });
-                    setTimeout(() => {
-                        document.querySelector("#pairs-container").innerHTML = randomPair;
-                        startBtn.disabled = false;
-                    }, 400);
                 }
 
                 started = true;
